@@ -1,0 +1,10 @@
+* Shoot and Catch
+this is a game i am making
+** Idea
+- you control a simple character in a top down view
+- you get attacked by enemies that walk toward you, stop when
+  they get close ish, and fire at you, they might back away
+  if you get too close to them
+- firing a bullet costs you 1HP, catching your own bullet back
+  gets you 1HP back
+- 
