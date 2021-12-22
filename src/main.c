@@ -1,17 +1,32 @@
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_scancode.h>
+#include <SDL2/SDL_surface.h>
 #include <stdio.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_events.h>
+#include <SDL2/SDL_image.h>
 #include "sdl_util.h"
+
+#define SCREENWIDTH 1600
+#define SCREENHEIGHT 900
 
 int main()
 {
-    SDL_Window *window;
-    SDL_Renderer *renderer;
-    basicSetup(800, 800, (SDL_INIT_VIDEO|SDL_INIT_EVENTS|SDL_INIT_TIMER),
+    SDL_Window* window;
+    SDL_Renderer* renderer;
+    basicSetup(SCREENWIDTH, SCREENHEIGHT,
+               (SDL_INIT_VIDEO|SDL_INIT_EVENTS|SDL_INIT_TIMER),
                "your nan", &window, &renderer);
 
+    SDL_Surface* pSurface = IMG_Load("src/triangle.png");
+    SDL_Texture* pTexture = SDL_CreateTextureFromSurface(renderer, pSurface);
+    SDL_FreeSurface(pSurface);
+
+    SDL_Rect testRect;
+    testRect.x = 50;
+    testRect.y = 50;
+
+    SDL_QueryTexture(pTexture, NULL, NULL, &testRect.w, &testRect.h);
 
     SDL_RenderClear(renderer);
     SDL_RenderPresent(renderer);
@@ -40,6 +55,9 @@ int main()
                 }
             }
         }
+
+        SDL_RenderCopy(renderer, pTexture, NULL, &testRect);
+
         SDL_RenderPresent(renderer);
         SDL_Delay(60 / 1000);
     }
