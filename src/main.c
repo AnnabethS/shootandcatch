@@ -6,6 +6,7 @@
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_image.h>
 #include "sdl_util.h"
+#include "player.h"
 
 #define SCREENWIDTH 1600
 #define SCREENHEIGHT 900
@@ -18,15 +19,13 @@ int main()
                (SDL_INIT_VIDEO|SDL_INIT_EVENTS|SDL_INIT_TIMER),
                "your nan", &window, &renderer);
 
-    SDL_Surface* pSurface = IMG_Load("src/triangle.png");
+    SDL_Surface* pSurface = IMG_Load("res/triangle.png");
     SDL_Texture* pTexture = SDL_CreateTextureFromSurface(renderer, pSurface);
     SDL_FreeSurface(pSurface);
 
-    SDL_Rect testRect;
-    testRect.x = 50;
-    testRect.y = 50;
+    player_t* player = initPlayer(50, 50, 0, pTexture, 0.25);
 
-    SDL_QueryTexture(pTexture, NULL, NULL, &testRect.w, &testRect.h);
+    printf("player init successful\n");
 
     SDL_RenderClear(renderer);
     SDL_RenderPresent(renderer);
@@ -56,7 +55,7 @@ int main()
             }
         }
 
-        SDL_RenderCopy(renderer, pTexture, NULL, &testRect);
+        drawPlayer(renderer, player);
 
         SDL_RenderPresent(renderer);
         SDL_Delay(60 / 1000);
