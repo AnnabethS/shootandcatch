@@ -15,17 +15,17 @@ player_t* initPlayer(float xStart, float yStart, float rotation,
     p->defaultTexture = texture;
     int w,h;
     SDL_QueryTexture(texture, NULL, NULL, &w, &h);
-    p->rect.w = (int)w * textureScale;
-    p->rect.h = (int)h * textureScale;
+    p->rect.w = (float)w * textureScale;
+    p->rect.h = (float)h * textureScale;
     p->rotation = 0;
     p->textureCentre.x = p->rect.w / 2;
     p->textureCentre.y = p->rect.h / 2;
+    printf("%f %f\n", p->textureCentre.x, p->textureCentre.y);
     return p;
 }
 
 void drawPlayer(SDL_Renderer *renderer, player_t* player)
 {
-    printf("rot %f\n", player->rotation);
     SDL_RenderCopyExF(renderer, player->defaultTexture, NULL, &player->rect,
                      player->rotation, &player->textureCentre, SDL_FLIP_NONE);
 }
@@ -50,8 +50,8 @@ void movePlayer(player_t *player, int moveX, int moveY)
 
 void rotatePlayer(player_t *player, int mouseX, int mouseY)
 {
-    player->rotation = (atan2((player->rect.y + player->textureCentre.y/2) - mouseY,
-                              (player->rect.x + player->textureCentre.x/2) - mouseX)
+    player->rotation = (atan2((player->rect.y + player->textureCentre.y) - mouseY,
+                              (player->rect.x + player->textureCentre.x) - mouseX)
                         * 180/PI);
     if(player->rotation >= 360)
         player->rotation = 360 - player->rotation;
