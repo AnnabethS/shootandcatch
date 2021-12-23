@@ -1,3 +1,4 @@
+#include <SDL2/SDL_mouse.h>
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_scancode.h>
 #include <SDL2/SDL_surface.h>
@@ -23,18 +24,23 @@ int main()
     SDL_Texture* pTexture = SDL_CreateTextureFromSurface(renderer, pSurface);
     SDL_FreeSurface(pSurface);
 
-    player_t* player = initPlayer(50, 50, 0, pTexture, 0.25);
-
-    printf("player init successful\n");
+    player_t* player = initPlayer(50, 50, 0, pTexture, 0.15);
+    player->speed = 0.03;
 
     SDL_RenderClear(renderer);
     SDL_RenderPresent(renderer);
     
     char running = 1;
 
+    int playerMoveX = 0;
+    int playerMoveY = 0;
+
+    int mouseX = 0;
+    int mouseY = 0;
+
     while(running)
     {
-        SDL_RenderClear(renderer);
+        //update
         SDL_Event event;
         while(SDL_PollEvent(&event))
         {
@@ -49,12 +55,66 @@ int main()
                 case SDL_SCANCODE_ESCAPE:
                     running = 0;
                     break;
+                case SDL_SCANCODE_W:
+                case SDL_SCANCODE_UP:
+                    playerMoveY = -1;
+                    break;
+                case SDL_SCANCODE_S:
+                case SDL_SCANCODE_DOWN:
+                    playerMoveY = 1;
+                    break;
+                case SDL_SCANCODE_A:
+                case SDL_SCANCODE_LEFT:
+                    playerMoveX = -1;
+                    break;
+                case SDL_SCANCODE_D:
+                case SDL_SCANCODE_RIGHT:
+                    playerMoveX = 1;
+                    break;
                 default:
                     break;
                 }
+                break;
+            case SDL_KEYUP:
+                switch(event.key.keysym.scancode)
+                {
+                case SDL_SCANCODE_W:
+                case SDL_SCANCODE_UP:
+                    if(playerMoveY == -1)
+                        playerMoveY = 0;
+                    break;
+                case SDL_SCANCODE_S:
+                case SDL_SCANCODE_DOWN:
+                    if(playerMoveY == 1)
+                        playerMoveY = 0;
+                    break;
+                case SDL_SCANCODE_A:
+                case SDL_SCANCODE_LEFT:
+                    if(playerMoveX == -1)
+                        playerMoveX = 0;
+                    break;
+                case SDL_SCANCODE_D:
+                case SDL_SCANCODE_RIGHT:
+                    if(playerMoveX == 1)
+                        playerMoveX = 0;
+                    break;
+                default:
+                    break;
+                }
+            case SDL_MOUSEMOTION:
+                mouseX = event.motion.x;
+                mouseY = event.motion.y;
+                break;
             }
         }
-
+        SDL_GetMouseState(&mouseX, &mouseY);
+        
+        movePlayer(player, playerMoveX, playerMoveY);
+        rotatePlayer(player, mouseX, mouseY);
+        
+        // draw
+        SDL_RenderClear(renderer);
+            
         drawPlayer(renderer, player);
 
         SDL_RenderPresent(renderer);
