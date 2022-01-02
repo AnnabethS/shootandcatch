@@ -8,6 +8,7 @@
 #include <SDL2/SDL_image.h>
 #include "sdl_util.h"
 #include "player.h"
+#include "bullet.h"
 
 #define SCREENWIDTH 1600
 #define SCREENHEIGHT 900
@@ -26,6 +27,9 @@ int main()
 
     player_t* player = initPlayer(50, 50, 0, pTexture, 0.15);
     player->speed = 0.03;
+
+    bullet_t* bulletListHead = NULL;
+    bullet_t* bulletListTail = NULL;
 
     SDL_RenderClear(renderer);
     SDL_RenderPresent(renderer);
@@ -105,17 +109,49 @@ int main()
                 mouseX = event.motion.x;
                 mouseY = event.motion.y;
                 break;
+            case SDL_MOUSEBUTTONDOWN:
+                if(bulletListHead == NULL)
+                {
+                    bulletListHead = malloc(sizeof(bullet_t));
+                    bulletListTail = bulletListHead;
+                    initBullet(bulletListHead, player->rotation,
+                              pTexture, player->rect.x, player->rect.y);
+                }
+                else
+                {
+                    bulletListTail->next = malloc(sizeof(bullet_t));
+                    bulletListTail = bulletListTail->next;
+                    initBullet(bulletListTail, player->rotation,
+                               pTexture, player->rect.x, player->rect.y);
+                }
+                break;
             }
         }
         SDL_GetMouseState(&mouseX, &mouseY);
         
         movePlayer(player, playerMoveX, playerMoveY);
         rotatePlayer(player, mouseX, mouseY);
+
+        bullet_t* bullet_ptr = bulletListHead;
+        
+        while(bullet_ptr != NULL)
+        {
+            updateBullet(bullet_ptr);
+            bullet_ptr = bullet_ptr->next;
+        }
         
         // draw
         SDL_RenderClear(renderer);
             
         drawPlayer(renderer, player);
+
+        bullet_ptr = bulletListHead;
+        
+        while(bullet_ptr != NULL)
+        {
+            drawBullet(bullet_ptr, renderer);
+            bullet_ptr = bullet_ptr->next;
+        }
 
         SDL_RenderPresent(renderer);
         SDL_Delay(60 / 1000);
