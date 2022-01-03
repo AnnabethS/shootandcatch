@@ -1,0 +1,20 @@
+* Main TODO list
+** NEED
+*** TODO decide on scrolling / static screen
+
+*** TODO bullet bouncing
+**** TODO bullet collision
+decide if we are using AABB or something more complex
+**** TODO the actual bounce
+use x / y inversions and individual movements to check
+if the movements would cause a bounce in x or y, and if
+neither, then check both together.
+*** TODO player collision
+**** TODO the player cannot walk off screen
+**** TODO the player cannot walk through AABBs (will be used for maps)
+*** TODO load maps
+**** TODO create map maker (stored only in RAM)
+**** TODO create map format
+**** TODO create map loader
+** WANT
+** COULD
