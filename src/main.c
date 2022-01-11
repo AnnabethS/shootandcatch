@@ -132,11 +132,38 @@ int main()
         movePlayer(player, playerMoveX, playerMoveY);
         rotatePlayer(player, mouseX, mouseY);
 
+        bullet_t* prevBullet_ptr = NULL;
         bullet_t* bullet_ptr = bulletListHead;
+        
         
         while(bullet_ptr != NULL)
         {
-            updateBullet(bullet_ptr);
+	        int bulletExited = updateBullet(bullet_ptr, SCREENWIDTH, SCREENHEIGHT);
+	        if(bulletExited)
+	        {
+		        if(prevBullet_ptr != NULL)
+		        {
+					prevBullet_ptr->next = bullet_ptr->next;
+					free(bullet_ptr);
+					bullet_ptr = prevBullet_ptr->next;
+		        }
+		        else
+		        {
+			        if(bulletListHead == bulletListTail)
+			        {
+				        bulletListTail = NULL;
+				        free(bulletListTail);
+				        bulletListHead = NULL;
+			        }
+			        else
+			        {
+				        bullet_t* newHead = bulletListHead->next;
+						free(bulletListHead);
+						bulletListHead = newHead;
+			        }
+		        }
+	        }
+            prevBullet_ptr = bullet_ptr;
             bullet_ptr = bullet_ptr->next;
         }
         

@@ -19,7 +19,7 @@ void initBullet(bullet_t* bullet, float rotation,
 
 void moveBullet(bullet_t* bullet);
 
-void updateBullet(bullet_t* bullet);
+int updateBullet(bullet_t* bullet, int screenWidth, int screenHeight);
 
 void drawBullet(bullet_t* bullet, SDL_Renderer* renderer);
 #endif

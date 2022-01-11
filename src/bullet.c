@@ -1,5 +1,6 @@
 #include "bullet.h"
 #include <SDL2/SDL_render.h>
+#include <SDL2/SDL2_gfxPrimitives.h>
 #include <math.h>
 
 #define SPEED 0.05
@@ -38,14 +39,22 @@ void moveBullet(bullet_t* bullet)
     bullet->rect.y += bullet->perFrameMove.y;
 }
 
-void updateBullet(bullet_t* bullet)
+int updateBullet(bullet_t* bullet, int screenWidth, int screenHeight)
 {
     bullet->rect.x += bullet->perFrameMove.x;
     bullet->rect.y += bullet->perFrameMove.y;
+    if(bullet->rect.x < 0 | bullet->rect.x + bullet->rect.w >= screenWidth |
+	    bullet->rect.y < 0 | bullet->rect.y + bullet->rect.h >= screenHeight)
+	    return 1;
+    else
+	    return 0;
 }
 
 void drawBullet(bullet_t* bullet, SDL_Renderer* renderer)
 {
     SDL_RenderCopyExF(renderer, bullet->texture, NULL, &bullet->rect,
                       bullet->rotation, &bullet->textureCentre, SDL_FLIP_NONE);
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_RenderDrawRectF(renderer, &(bullet->rect));
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 }
