@@ -25,6 +25,10 @@ int main()
     SDL_Texture* pTexture = SDL_CreateTextureFromSurface(renderer, pSurface);
     SDL_FreeSurface(pSurface);
 
+    SDL_Surface* bulletSurface = IMG_Load("res/bullet.png");
+    SDL_Texture* bulletTexture = SDL_CreateTextureFromSurface(renderer, bulletSurface);
+    SDL_FreeSurface(bulletSurface);
+
     player_t* player = initPlayer(50, 50, 0, pTexture, 0.15);
     player->speed = 0.03;
 
@@ -115,14 +119,18 @@ int main()
                     bulletListHead = malloc(sizeof(bullet_t));
                     bulletListTail = bulletListHead;
                     initBullet(bulletListHead, player->rotation,
-                              pTexture, player->rect.x, player->rect.y);
+                               bulletTexture,
+                               player->rect.x + player->textureCentre.x,
+                               player->rect.y + player->textureCentre.y);
                 }
                 else
                 {
                     bulletListTail->next = malloc(sizeof(bullet_t));
                     bulletListTail = bulletListTail->next;
                     initBullet(bulletListTail, player->rotation,
-                               pTexture, player->rect.x, player->rect.y);
+                               bulletTexture,
+                               player->rect.x + player->textureCentre.x,
+                               player->rect.y + player->textureCentre.y);
                 }
                 break;
             }
@@ -168,7 +176,9 @@ int main()
         }
         
         // draw
+        SDL_SetRenderDrawColor(renderer, 100, 100, 100, 255);
         SDL_RenderClear(renderer);
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
             
         drawPlayer(renderer, player);
 

@@ -11,6 +11,7 @@ typedef struct bullet_t
     SDL_FPoint perFrameMove;
     float speed;
     float rotation;
+	int currentBounces;
     struct bullet_t* next;
 }bullet_t;
 
