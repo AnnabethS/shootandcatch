@@ -1,6 +1,7 @@
 #include <SDL2/SDL_mouse.h>
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_scancode.h>
+#include <SDL2/SDL_stdinc.h>
 #include <SDL2/SDL_surface.h>
 #include <stdio.h>
 #include <SDL2/SDL.h>
@@ -13,6 +14,19 @@
 #define SCREENWIDTH 1600
 #define SCREENHEIGHT 900
 
+#define TICK_INTERVAL 15
+
+static Uint32 next_tick;
+
+Uint32 timeLeft()
+{
+	Uint32 now = SDL_GetTicks();
+	if(next_tick <= now)
+		return 0;
+	else
+		return next_tick - now;
+}
+
 int main()
 {
     SDL_Window* window;
@@ -21,7 +35,7 @@ int main()
                (SDL_INIT_VIDEO|SDL_INIT_EVENTS|SDL_INIT_TIMER),
                "your nan", &window, &renderer);
 
-    SDL_Surface* pSurface = IMG_Load("res/triangle.png");
+    SDL_Surface* pSurface = IMG_Load("res/player.png");
     SDL_Texture* pTexture = SDL_CreateTextureFromSurface(renderer, pSurface);
     SDL_FreeSurface(pSurface);
 
@@ -29,8 +43,8 @@ int main()
     SDL_Texture* bulletTexture = SDL_CreateTextureFromSurface(renderer, bulletSurface);
     SDL_FreeSurface(bulletSurface);
 
-    player_t* player = initPlayer(50, 50, 0, pTexture, 0.15);
-    player->speed = 0.03;
+    player_t* player = initPlayer(50, 50, 0, pTexture, 4);
+    player->speed = 5;
 
     bullet_t* bulletListHead = NULL;
     bullet_t* bulletListTail = NULL;
@@ -45,6 +59,8 @@ int main()
 
     int mouseX = 0;
     int mouseY = 0;
+
+	next_tick = SDL_GetTicks() + TICK_INTERVAL;
 
     while(running)
     {
@@ -191,7 +207,8 @@ int main()
         }
 
         SDL_RenderPresent(renderer);
-        SDL_Delay(60 / 1000);
+        SDL_Delay(timeLeft());
+        next_tick += TICK_INTERVAL;
     }
 
 

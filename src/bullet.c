@@ -3,7 +3,7 @@
 #include <SDL2/SDL2_gfxPrimitives.h>
 #include <math.h>
 
-#define SPEED 0.05
+#define SPEED 10
 #define PI 3.141529
 #define RAD2DEG 180 / PI
 #define DEG2RAD PI / 180
@@ -13,8 +13,8 @@ void initBullet(bullet_t* bullet, float rotation,
 {
     int w,h;
     SDL_QueryTexture(texture, NULL, NULL, &w, &h);
-    w *= 8;
-    h *= 8;
+    w *= 4;
+    h *= 4;
     bullet->rect.w = (float) w;
     bullet->rect.h = (float) h;
 
