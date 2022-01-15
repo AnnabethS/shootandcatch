@@ -43,8 +43,8 @@ int updateBullet(bullet_t* bullet, int screenWidth, int screenHeight)
 {
     bullet->rect.x += bullet->perFrameMove.x;
     bullet->rect.y += bullet->perFrameMove.y;
-    if(bullet->rect.x < 0 | bullet->rect.x + bullet->rect.w >= screenWidth |
-	    bullet->rect.y < 0 | bullet->rect.y + bullet->rect.h >= screenHeight)
+    if(bullet->rect.x + bullet->rect.w < 0 | bullet->rect.x >= screenWidth |
+	    bullet->rect.y + bullet->rect.h < 0 | bullet->rect.y >= screenHeight)
 	    return 1;
     else
 	    return 0;
