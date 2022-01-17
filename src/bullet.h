@@ -12,6 +12,8 @@ typedef struct bullet_t
     float speed;
     float rotation;
 	int currentBounces;
+	//corners are defined topleft topright botright botleft
+	SDL_FPoint corners[4];
     struct bullet_t* next;
 }bullet_t;
 
@@ -23,4 +25,7 @@ void moveBullet(bullet_t* bullet);
 int updateBullet(bullet_t* bullet, int screenWidth, int screenHeight);
 
 void drawBullet(bullet_t* bullet, SDL_Renderer* renderer);
+
+void rotateBulletCorners(bullet_t *bullet, float rotation);
+void rotateFPoint(SDL_FPoint* point, SDL_FPoint* centre, float rotation);
 #endif
