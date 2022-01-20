@@ -93,13 +93,9 @@ int updateBullet(bullet_t* bullet, int screenWidth, int screenHeight)
 
 void drawBullet(bullet_t* bullet, SDL_Renderer* renderer)
 {
-	SDL_FPoint origin;
-	origin.x = 0;
-	origin.y = 0;
     SDL_RenderCopyExF(renderer, bullet->texture, NULL, &bullet->rect,
                       bullet->rotation, &bullet->textureCentre, SDL_FLIP_NONE);
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    //SDL_RenderDrawRectF(renderer, &(bullet->rect));
     
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
     for(int i=0; i<3; i++)
@@ -121,42 +117,39 @@ void drawBullet(bullet_t* bullet, SDL_Renderer* renderer)
 
 void rotateBulletCorners(bullet_t *bullet, float rotation)
 {
-	printf("%f ", rotation);
 	if(rotation < 0)
 		rotation += 360;
-
-	printf("%f\n", rotation);
 
 	rotation *= DEG2RAD;
 	float w = bullet->rect.w;
 	float h = bullet->rect.h;
-	float xoff = bullet->textureCentre.x / 2;
-	float yoff = bullet->textureCentre.y / 2;
 	float c = cos(rotation);
 	float s = sin(rotation);
-
-	/* bullet->corners[0].x = (-xoff)*c - (-yoff)*s; */
-	/* bullet->corners[0].y = (-xoff)*s + (-yoff)*c; */
-
-	/* bullet->corners[1].x = (-xoff + w)*c - (-yoff)*s; */
-	/* bullet->corners[1].y = (-xoff + w)*s + (-yoff)*c; */
-
-	/* bullet->corners[2].x = (-xoff + w)*c - (-yoff + h)*s; */
-	/* bullet->corners[2].y = (-xoff + w)*s + (-yoff + h)*c; */
-
-	/* bullet->corners[3].x = (-xoff)*c - (-yoff + h)*s; */
-	/* bullet->corners[3].y = (-xoff)*s + (-yoff + h)*c; */
 
 	bullet->corners[0].x = 0;
 	bullet->corners[0].y = 0;
 
-	bullet->corners[1].x = w*cos(rotation);
-	bullet->corners[1].y = w*sin(rotation);
+	bullet->corners[1].x = w*c;
+	bullet->corners[1].y = w*s;
 
-	bullet->corners[2].x = w*cos(rotation) - h*sin(rotation);
-	bullet->corners[2].y = w*sin(rotation) + h*cos(rotation);
+	bullet->corners[2].x = w*c - h*s;
+	bullet->corners[2].y = w*s + h*c;
 
-	bullet->corners[3].x = 0 - h*sin(rotation);
-	bullet->corners[3].y = h*cos(rotation);
+	bullet->corners[3].x = 0 - h*s;
+	bullet->corners[3].y = h*c;
+
+	SDL_FPoint oCentre;
+	oCentre.x = bullet->rect.w/2;
+	oCentre.y = bullet->rect.h/2;
+
+	SDL_FPoint rCentre;
+	rCentre.x = bullet->corners[2].x/2;
+	rCentre.y = bullet->corners[2].y/2;
+
+	for(int i=0; i < 4; i++)
+	{
+		bullet->corners[i].x += oCentre.x - rCentre.x;
+		bullet->corners[i].y += oCentre.y - rCentre.y;
+	}
 }
 
