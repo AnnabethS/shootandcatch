@@ -167,9 +167,19 @@ int main()
 	        {
 		        if(prevBullet_ptr != NULL)
 		        {
-					prevBullet_ptr->next = bullet_ptr->next;
-					free(bullet_ptr);
-					bullet_ptr = prevBullet_ptr->next;
+			        if(bullet_ptr != bulletListTail)
+			        {
+						prevBullet_ptr->next = bullet_ptr->next;
+						free(bullet_ptr);
+						bullet_ptr = prevBullet_ptr->next;
+			        }
+			        else
+			        {
+				        prevBullet_ptr->next = NULL;
+				        free(bullet_ptr);
+				        bullet_ptr = NULL;
+				        bulletListTail = prevBullet_ptr;
+			        }
 		        }
 		        else
 		        {
@@ -188,7 +198,8 @@ int main()
 		        }
 	        }
             prevBullet_ptr = bullet_ptr;
-            bullet_ptr = bullet_ptr->next;
+            if(bullet_ptr != NULL)
+				bullet_ptr = bullet_ptr->next;
         }
         
         // draw
