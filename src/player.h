@@ -9,6 +9,8 @@ typedef struct player_t
     SDL_Texture* defaultTexture;
     SDL_FPoint textureCentre;
     float speed;
+	int currentHealth;
+	int maxHealth;
 }player_t;
 
 // this function will malloc() the player on the heap, and initialise it

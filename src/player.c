@@ -20,6 +20,8 @@ player_t* initPlayer(float xStart, float yStart, float rotation,
     p->rotation = 0;
     p->textureCentre.x = p->rect.w / 2;
     p->textureCentre.y = p->rect.h / 2;
+    p->maxHealth = 10;
+    p->currentHealth = p->maxHealth;
     return p;
 }
 
