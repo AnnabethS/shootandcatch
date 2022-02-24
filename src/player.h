@@ -14,8 +14,8 @@ typedef struct player_t
 }player_t;
 
 // this function will malloc() the player on the heap, and initialise it
-player_t* initPlayer(float xStart, float yStart, float rotation,
-                     SDL_Texture* texture, float textureScale);
+player_t* initPlayer(float xStart, float yStart, float rotation, float textureScale);
+
 void drawPlayer(SDL_Renderer* renderer, player_t* player);
 
 void movePlayer(player_t *player, int moveX, int moveY);

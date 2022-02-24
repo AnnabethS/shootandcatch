@@ -6,7 +6,6 @@
 typedef struct bullet_t
 {
     SDL_FRect rect;
-    SDL_Texture* texture;
     SDL_FPoint textureCentre;
     SDL_FPoint perFrameMove;
     float speed;

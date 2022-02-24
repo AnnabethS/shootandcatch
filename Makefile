@@ -5,5 +5,5 @@ SOURCES = $(wildcard src/*.c)
 LINKER_FLAGS = -lSDL2 -lSDL2_image -lm
 
 $(TARGET): $(SOURCES)
-	$(CC) $^ -O3 -o $@ $(LINKER_FLAGS)
+	$(CC) $^ -O2 -o $@ $(LINKER_FLAGS)
 

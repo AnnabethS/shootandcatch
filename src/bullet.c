@@ -3,6 +3,8 @@
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
 #include <math.h>
+#include "textures.h"
+#include "anna-layer.h"
 
 #define SPEED 10
 #define PI 3.14159265
@@ -13,13 +15,12 @@ void initBullet(bullet_t* bullet, float rotation,
                 SDL_Texture* texture, float startX, float startY)
 {
     int w,h;
-    SDL_QueryTexture(texture, NULL, NULL, &w, &h);
+    SDL_QueryTexture(textures.bullet, NULL, NULL, &w, &h);
     w *= 4;
     h *= 4;
     bullet->rect.w = (float) w;
     bullet->rect.h = (float) h;
 
-    bullet->texture = texture;
     bullet->textureCentre.x = (float)w/2;
     bullet->textureCentre.y = (float)h/2;
 
@@ -93,7 +94,7 @@ int updateBullet(bullet_t* bullet, int screenWidth, int screenHeight)
 
 void drawBullet(bullet_t* bullet, SDL_Renderer* renderer)
 {
-    SDL_RenderCopyExF(renderer, bullet->texture, NULL, &bullet->rect,
+    SDL_RenderCopyExF(renderer, textures.bullet, NULL, &bullet->rect,
                       bullet->rotation, &bullet->textureCentre, SDL_FLIP_NONE);
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     

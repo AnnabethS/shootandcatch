@@ -10,11 +10,15 @@
 #include "sdl_util.h"
 #include "player.h"
 #include "bullet.h"
+#include "anna-layer.h"
+#include "textures.h"
 
 #define SCREENWIDTH 1600
 #define SCREENHEIGHT 900
 
 #define TICK_INTERVAL 15
+
+ts textures;
 
 static Uint32 next_tick;
 
@@ -33,17 +37,17 @@ int main()
     SDL_Renderer* renderer;
     basicSetup(SCREENWIDTH, SCREENHEIGHT,
                (SDL_INIT_VIDEO|SDL_INIT_EVENTS|SDL_INIT_TIMER),
-               "your nan", &window, &renderer);
+               "Shoot and Catch", &window, &renderer);
 
-    SDL_Surface* pSurface = IMG_Load("res/player.png");
-    SDL_Texture* pTexture = SDL_CreateTextureFromSurface(renderer, pSurface);
-    SDL_FreeSurface(pSurface);
+    if(loadTextures(renderer))
+    {
+	    printf("failure during texture loading... quitting\n");
+	    return 1;
+    }
+    if(textures.player == NULL)
+	    printf("playertexture null\n");
 
-    SDL_Surface* bulletSurface = IMG_Load("res/bullet.png");
-    SDL_Texture* bulletTexture = SDL_CreateTextureFromSurface(renderer, bulletSurface);
-    SDL_FreeSurface(bulletSurface);
-
-    player_t* player = initPlayer(50, 50, 0, pTexture, 4);
+    player_t* player = initPlayer(50, 50, 0, 4);
     player->speed = 5;
 
     bullet_t* bulletListHead = NULL;
@@ -130,24 +134,28 @@ int main()
                 mouseY = event.motion.y;
                 break;
             case SDL_MOUSEBUTTONDOWN:
-                if(bulletListHead == NULL)
-                {
-                    bulletListHead = malloc(sizeof(bullet_t));
-                    bulletListTail = bulletListHead;
-                    initBullet(bulletListHead, player->rotation,
-                               bulletTexture,
-                               player->rect.x + player->textureCentre.x,
-                               player->rect.y + player->textureCentre.y);
-                }
-                else
-                {
-                    bulletListTail->next = malloc(sizeof(bullet_t));
-                    bulletListTail = bulletListTail->next;
-                    initBullet(bulletListTail, player->rotation,
-                               bulletTexture,
-                               player->rect.x + player->textureCentre.x,
-                               player->rect.y + player->textureCentre.y);
-                }
+	            if(player->currentHealth > 0)
+	            {
+		            player->currentHealth--;
+					if(bulletListHead == NULL)
+					{
+						bulletListHead = malloc(sizeof(bullet_t));
+						bulletListTail = bulletListHead;
+						initBullet(bulletListHead, player->rotation,
+									textures.bullet,
+									player->rect.x + player->textureCentre.x,
+									player->rect.y + player->textureCentre.y);
+					}
+					else
+					{
+						bulletListTail->next = malloc(sizeof(bullet_t));
+						bulletListTail = bulletListTail->next;
+						initBullet(bulletListTail, player->rotation,
+									textures.bullet,
+									player->rect.x + player->textureCentre.x,
+									player->rect.y + player->textureCentre.y);
+					}
+	            }
                 break;
             }
         }

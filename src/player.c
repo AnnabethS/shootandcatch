@@ -3,18 +3,18 @@
 #include <SDL2/SDL_render.h>
 #include <math.h>
 #include "player.h"
+#include "textures.h"
 
 #define PI 3.14159265
 
-player_t* initPlayer(float xStart, float yStart, float rotation,
-                     SDL_Texture* texture, float textureScale)
+player_t* initPlayer(float xStart, float yStart, float rotation, float textureScale)
 {
     player_t* p = malloc(sizeof(player_t));
     p->rect.x = xStart;
     p->rect.y = yStart;
-    p->defaultTexture = texture;
     int w,h;
-    SDL_QueryTexture(texture, NULL, NULL, &w, &h);
+    SDL_QueryTexture(textures.player, NULL, NULL, &w, &h);
+    printf("%d %d\n", w, h);
     p->rect.w = (float)w * textureScale;
     p->rect.h = (float)h * textureScale;
     p->rotation = 0;
@@ -27,7 +27,7 @@ player_t* initPlayer(float xStart, float yStart, float rotation,
 
 void drawPlayer(SDL_Renderer *renderer, player_t* player)
 {
-    SDL_RenderCopyExF(renderer, player->defaultTexture, NULL, &player->rect,
+    SDL_RenderCopyExF(renderer, textures.player, NULL, &player->rect,
                      player->rotation, &player->textureCentre, SDL_FLIP_NONE);
 }
 
